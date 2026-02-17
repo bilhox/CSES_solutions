@@ -1,17 +1,40 @@
 from itertools import accumulate
-from math import inf
 
-n, a, b = map(int, input().split())
-x = list(map(int, input().split()))
+n, l, r = map(int, input().split())
+a = list(map(int, input().split()))
 
-pref = list(accumulate(x))
+pref = [0] + list(accumulate(a))
 
-current_sum = -inf
-best_sum = -inf
+right = n
+left = n - r
 
-for v in x:
-    current_sum = max(current_sum + v, v)
-    best_sum = max(current_sum, best_sum)
+best_so_far = -float("inf")
 
-print(pref)
-print(best_sum)
+stack = []
+
+while right >= l:
+    finished = False
+    while not finished:
+        finished = True
+        if not stack:
+            continue
+        if right - stack[-1][0] < l:
+            stack.pop()
+            finished = False
+
+    if not stack:
+        for i in range(right - l, left - 1, -1):
+            if not stack:
+                stack.append((i, pref[i]))
+            elif stack[-1][1] >= pref[i]:
+                stack.append((i, pref[i]))
+
+    best_so_far = max(pref[right] - stack[-1][1], best_so_far)
+
+    right -= 1
+    left = max(left - 1, 0)
+
+    if stack[-1][1] >= pref[left]:
+        stack.append((left, pref[left]))
+
+print(best_so_far)
