@@ -1,23 +1,20 @@
-import math
-
-def count_l(r):
-    v = 0
-    for i in range(1, r + 1):
-        v += i * math.comb(r, i)
-    return v
-
 n = int(input())
-log = int(math.log2(n))
-res = count_l(log)
+total = 0
+"""
+0000
+0001
+0010
+0011
+0100
+0101
+0110
+0111
+"""
 
-h = bin(n)[3:][::-1]
-set_count = h.count("1")
-past_val = 0
-sum_x = 0
-for i, c in enumerate(h):
-    if c == '1':
-        sum_x += count_l(i + 1) - count_l(i) - past_val
-    past_val = count_l(i + 1)
-sum_x += 1
+for i in range(65):
+    count = (n + 1) // 2**i
+    if count % 2:
+        total += (n + 1) % 2**i
+    total += (count // 2) * 2**i
 
-print(res + sum_x, res)
+print(total)
