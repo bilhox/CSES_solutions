@@ -1,7 +1,5 @@
-from collections import deque
 from heapq import *
 import sys
-
 
 """
 Bad time, even tho it should be O((n + m)^2*log n), because
