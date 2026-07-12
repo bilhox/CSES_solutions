@@ -69,3 +69,46 @@ callback_min = min
 callback_max = max
 callback_sum = lambda u, v : u + v
 callback_xor = lambda u, v : u ^ v
+
+
+"""
+Version bottom-top
+"""
+
+SIZE = 2**32
+
+def build(l, tree):
+
+    N = len(l)
+    for i in range(N):
+        tree[i + SIZE] = l[i]
+    
+    for i in range(SIZE - 1, 0, -1):
+        tree[i] = tree[2 * i] + tree[2 * i + 1]
+
+def query(l, r, tree):
+
+    res = 0
+    l += SIZE
+    r += SIZE
+
+    while l <= r:
+        if l & 1:
+            res += tree[l]
+            l += 1
+        if r & 1 == 0:
+            res += tree[r]
+            r -= 1
+        l >>= 1
+        r >>= 1
+    
+    return res
+
+
+def update(x, v, tree):
+
+    x += SIZE
+    tree[x] = v
+    while x > 1:
+        x >>= 1
+        tree[x] = tree[2 * x] + tree[2 * x + 1]
