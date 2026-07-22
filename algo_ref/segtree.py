@@ -10,10 +10,10 @@ class SegTree:
         self.array = [neutral] * (2 * self.size)
         self.neutral = neutral
 
-    def range(self, sx, sy):
-        return self._range(0, sx, sy, 0, self.size)
+    def query(self, sx, sy):
+        return self._query(0, sx, sy, 0, self.size)
     
-    def _range(self, x, sx, sy, lx, ly):
+    def _query(self, x, sx, sy, lx, ly):
 
         stack = [(x, lx, ly)]
         current_value = self.neutral
@@ -40,10 +40,10 @@ class SegTree:
         
         return current_value
     
-    def set(self, val, i):
-        self._set(val, i, 0, 0, self.size)
+    def update(self, val, i):
+        self._update(val, i, 0, 0, self.size)
 
-    def _set(self, val, i, x, lx, ly):
+    def _update(self, val, i, x, lx, ly):
 
         stack = [(x, lx, ly, False)]
 
@@ -75,7 +75,7 @@ callback_xor = lambda u, v : u ^ v
 Version bottom-top
 """
 
-SIZE = 2**32
+SIZE = (1 << 20)
 
 def build(l, tree):
 
