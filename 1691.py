@@ -1,12 +1,24 @@
+from collections import deque
 n, m = map(int, input().split())
+
+def bfs(graph, n):
+
+    visited = [0] * n
+    queue = deque([0])
+    visited[0] = 1
+
+    while queue:
+        node = queue.pop()
+        for neigh in graph[node]:
+            if not visited[neigh]:
+                queue.appendleft(neigh)
+                visited[neigh] = 1
+    return visited
 
 graph = [set() for _ in range(n)]
 degree = [0] * n
-first = None
 for _ in range(m):
     a, b = map(int, input().split())
-    if first is None:
-        first = a
     a -= 1
     b -= 1
     graph[a].add(b)
@@ -15,21 +27,14 @@ for _ in range(m):
     degree[b] += 1
 
 deg = [len(v) % 2 for v in graph]
-print(deg)
-if sum(deg) not in [0, 2]:
+
+seen = bfs(graph, n)
+
+if sum(deg) != 0 or not all(seen[v] or degree[v] == 0 for v in range(n)):
     print("IMPOSSIBLE")
     exit()
 
-kept = None
-
-if sum(deg) == 2:
-    u = deg.index(1)
-    v = deg.index(1, u + 1)
-    kept = (u, v)
-    graph[u].add(v)
-    graph[v].add(u)
-
-stack = [first]
+stack = [0]
 path = []
 while stack:
     node = stack[-1]
@@ -42,5 +47,7 @@ while stack:
         degree[node] -= 1
         graph[neigh].remove(node)
         stack.append(neigh)
+
+# print(kept)
 
 print(*path)
