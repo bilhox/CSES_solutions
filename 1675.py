@@ -22,8 +22,15 @@ def find(e):
     if not (0 <= e < n):
         return None
 
-    if parents[e] != e:
-        parents[e] = find(parents[e])
+    comp = [e]
+    curr = e
+    while parents[comp[-1]] != comp[-1]:
+        comp.append(parents[curr])
+        curr = parents[curr]
+
+    u = comp.pop()
+    while comp:
+        parents[comp.pop()] = u 
     
     return parents[e]
 

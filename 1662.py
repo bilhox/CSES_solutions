@@ -1,5 +1,7 @@
-from collections import defaultdict, OrderedDict
+from collections import defaultdict
 from itertools import accumulate
+
+X = 183883939741
 
 n = int(input())
 a = list(map(int, input().split()))
@@ -11,16 +13,16 @@ for i in range(1, n):
     pref[i] = (pref[i - 1] + a[i]) % n
 
 counter = 0
-seen = OrderedDict()
-seen[0] = 1
+seen = defaultdict(int)
+seen[X] = 1
 
 for v in pref:
-    if (v - n) % n in seen:
-        counter += seen[(v - n) % n]
+    if ((v - n) % n) ^ X in seen:
+        counter += seen[((v - n) % n) ^ X]
     
-    if v in seen:
-        seen[v] += 1
+    if v ^ X in seen:
+        seen[v ^ X] += 1
     else:
-        seen[v] = 1
+        seen[v ^ X] = 1
 
 print(counter)

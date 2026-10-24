@@ -1,20 +1,35 @@
 class DSU:
 
-    def __init__(self, singletons):
-        self.parents = {e : e for e in singletons}
-        self.rank = {e: 0 for e in singletons}
+    def __init__(self, n):
+        self.parents = list(range(n))
+        self.rank = [0] * n
+        self.size = n
     
     def find(self, e):
-
-        if e not in self.parents:
+        """
+        Récupère le représentant de e.
+        L'opération est en O(a(n)) où a est l'inverse de la fonction d'Ackermann.
+        """
+        if not (0 <= e < self.size):
             return None
-
-        if self.parents[e] != e:
-            self.parents[e] = self.find(self.parents[e])
+    
+        comp = [e]
+        curr = e
+        while self.parents[comp[-1]] != comp[-1]:
+            comp.append(self.parents[curr])
+            curr = self.parents[curr]
+    
+        u = comp.pop()
+        while comp:
+            self.parents[comp.pop()] = u 
         
         return self.parents[e]
     
     def union(self, e1, e2):
+        """
+        Fait la réunion des ensembles disjoints de e1 et e2.
+        L'opération est en O(a(n)) où a est l'inverse de la fonction d'Ackermann.
+        """
 
         r1, r2 = self.find(e1), self.find(e2)
         if r1 == r2:

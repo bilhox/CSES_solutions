@@ -1,7 +1,15 @@
 
+"""
+Version top -> bottom
+"""
 class SegTree:
 
     def __init__(self, n, callback, neutral):
+        """
+        Initialize the segment tree.
+        All values are set to ``neutral``.
+        We assume that ``callback`` is associative.
+        """
         self.size = 1
         while self.size < n:
             self.size *= 2
@@ -10,12 +18,22 @@ class SegTree:
         self.array = [neutral] * (2 * self.size)
         self.neutral = neutral
 
-    def query(self, sx, sy):
-        return self._query(0, sx, sy, 0, self.size)
-    
-    def _query(self, x, sx, sy, lx, ly):
+    def build(self, array):
+        """
+        Constructs the segment tree from array data in O(n).
+        """
 
-        stack = [(x, lx, ly)]
+        for i in range(len(array)):
+            self.array[self.size - 1 + i] = array[i]
+
+        for i in range(self.size - 2, -1, -1):
+            self.array[i] = self.callback(self.array[2 * i + 1], self.array[2 * i + 2])
+
+    def query(self, sx, sy):
+        """
+        Returns range operation of [sx, sy) in O(log n).
+        """
+        stack = [(0, 0, self.size)]
         current_value = self.neutral
 
         while stack:
@@ -35,17 +53,16 @@ class SegTree:
             elif sx >= m:
                 stack.append((2 * nx + 2, m, nly))
             else:
-                stack.append((2 * nx + 1, nlx, m))
                 stack.append((2 * nx + 2, m, nly))
+                stack.append((2 * nx + 1, nlx, m))
         
         return current_value
     
     def update(self, val, i):
-        self._update(val, i, 0, 0, self.size)
-
-    def _update(self, val, i, x, lx, ly):
-
-        stack = [(x, lx, ly, False)]
+        """
+        Updates value at index i with ``val`` in O(log n).
+        """
+        stack = [(0, 0, self.size, False)]
 
         while stack:
             nx , nlx, nly, computable = stack.pop()
@@ -72,7 +89,7 @@ callback_xor = lambda u, v : u ^ v
 
 
 """
-Version bottom-top
+Version bottom -> top
 """
 
 SIZE = (1 << 20)

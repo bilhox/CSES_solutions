@@ -1,3 +1,4 @@
+print(min((1, 2), (2, 3)))
 n = int(input())
 tree = [[] for _ in range(n + 1)]
 l = list(map(int, input().split()))
